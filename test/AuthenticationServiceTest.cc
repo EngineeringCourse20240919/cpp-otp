@@ -1,38 +1,30 @@
 #include "gtest/gtest.h"
 #include "../main/AuthenticationService.h"
+#include "gmock/gmock.h"
 
-class StubProfileDao : public ProfileDao {
+class GStubProfileDao : public ProfileDao {
 public:
-    std::string getPassword(const std::string userName) override {
-        return password;
-    }
-    std::string password;
+    MOCK_METHOD(std::string, getPassword, (const std::string));
 };
 
-class StubRsaTokenDao : public RsaTokenDao {
+class GStubRsaTokenDao : public RsaTokenDao {
 public:
-    std::string getRandom(std::string userName) override {
-        return token;
-    }
-    std::string token;
+    MOCK_METHOD(std::string, getRandom, (std::string));
 };
 
-class MockLogger : public Logger {
+class GMockLogger : public Logger {
 public:
-    void log(const std::string& message) override {
-        msg = message;
-    }
-    std::string msg;
+    MOCK_METHOD(void, log, (const std::string&));
 };
 
 namespace {
 
     TEST(AuthenticationService, IsValid) {
-        StubProfileDao* stubProfileDao = new StubProfileDao();
-        stubProfileDao->password = "91";
-        StubRsaTokenDao* stubRsaTokenDao = new StubRsaTokenDao();
-        stubRsaTokenDao->token = "000000";
-        MockLogger* mockLogger = new MockLogger();
+        GStubProfileDao* stubProfileDao = new GStubProfileDao();
+        ON_CALL(*stubProfileDao, getPassword(::testing::_)).WillByDefault(::testing::Return("91"));
+        GStubRsaTokenDao* stubRsaTokenDao = new GStubRsaTokenDao();
+        ON_CALL(*stubRsaTokenDao, getRandom(::testing::_)).WillByDefault(::testing::Return("000000"));
+        GMockLogger* mockLogger = new GMockLogger();
         AuthenticationService target = AuthenticationService(stubProfileDao, stubRsaTokenDao, mockLogger);
 
         bool actual = target.isValid("joey", "91000000");
@@ -45,11 +37,11 @@ namespace {
     }
 
     TEST(AuthenticationService, IsNotValid) {
-        StubProfileDao* stubProfileDao = new StubProfileDao();
-        stubProfileDao->password = "91";
-        StubRsaTokenDao* stubRsaTokenDao = new StubRsaTokenDao();
-        stubRsaTokenDao->token = "123456";
-        MockLogger* mockLogger = new MockLogger();
+        GStubProfileDao* stubProfileDao = new GStubProfileDao();
+        ON_CALL(*stubProfileDao, getPassword(::testing::_)).WillByDefault(::testing::Return("91"));
+        GStubRsaTokenDao* stubRsaTokenDao = new GStubRsaTokenDao();
+        ON_CALL(*stubRsaTokenDao, getRandom(::testing::_)).WillByDefault(::testing::Return("123456"));
+        GMockLogger* mockLogger = new GMockLogger();
         AuthenticationService target = AuthenticationService(stubProfileDao, stubRsaTokenDao, mockLogger);
 
         bool actual = target.isValid("joey", "91000000");
@@ -62,17 +54,17 @@ namespace {
     }
 
     TEST(AuthenticationService, LogMessageWhenNotValid) {
-        StubProfileDao* stubProfileDao = new StubProfileDao();
-        stubProfileDao->password = "91";
-        StubRsaTokenDao* stubRsaTokenDao = new StubRsaTokenDao();
-        stubRsaTokenDao->token = "123456";
-        MockLogger* mockLogger = new MockLogger();
+        GStubProfileDao* stubProfileDao = new GStubProfileDao();
+        ON_CALL(*stubProfileDao, getPassword(::testing::_)).WillByDefault(::testing::Return("91"));
+        GStubRsaTokenDao* stubRsaTokenDao = new GStubRsaTokenDao();
+        ON_CALL(*stubRsaTokenDao, getRandom(::testing::_)).WillByDefault(::testing::Return("123456"));
+        GMockLogger* mockLogger = new GMockLogger();
+        EXPECT_CALL(*mockLogger, log(::testing::Eq("login failed with userName: joey"))).Times(1);
         AuthenticationService target = AuthenticationService(stubProfileDao, stubRsaTokenDao, mockLogger);
 
         bool actual = target.isValid("joey", "91000000");
 
         ASSERT_FALSE(actual);
-        ASSERT_STREQ("login failed with userName: joey", mockLogger->msg.c_str());
 
         delete stubProfileDao;
         delete stubRsaTokenDao;
