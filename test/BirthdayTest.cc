@@ -19,6 +19,8 @@ namespace {
         Birthday birthday = Birthday(stubToday);
 
         ASSERT_TRUE(birthday.IsBirthday());
+
+        delete stubToday;
     }
 
     TEST(BirthdayTest, is_not_birthday) {
@@ -27,5 +29,7 @@ namespace {
         Birthday birthday = Birthday(stubToday);
 
         ASSERT_FALSE(birthday.IsBirthday());
+
+        delete stubToday;
     }
 }
