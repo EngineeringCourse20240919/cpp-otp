@@ -4,15 +4,17 @@
 #include <string>
 #include "ProfileDao.h"
 #include "RsaTokenDao.h"
+#include "Logger.h"
 
 class AuthenticationService {
 
 public:
-    explicit AuthenticationService(ProfileDao* profileDao, RsaTokenDao* rsaTokenDao);
+    explicit AuthenticationService(ProfileDao* profileDao, RsaTokenDao* rsaTokenDao, Logger* logger);
     bool isValid(const std::string userName, const std::string password);
 private:
     ProfileDao* profileDao;
     RsaTokenDao* rsaTokenDao;
+    Logger* logger;
 };
 
 

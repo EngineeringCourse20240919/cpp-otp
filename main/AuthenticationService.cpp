@@ -18,10 +18,11 @@ bool AuthenticationService::isValid(const std::string userName, const std::strin
     if (isValid) {
         return true;
     } else {
+        logger->log("login failed with userName: " + userName);
         return false;
     }
 }
 
-AuthenticationService::AuthenticationService(ProfileDao *profileDao, RsaTokenDao *rsaTokenDao) : profileDao(profileDao), rsaTokenDao(rsaTokenDao) {
+AuthenticationService::AuthenticationService(ProfileDao *profileDao, RsaTokenDao *rsaTokenDao, Logger *logger) : profileDao(profileDao), rsaTokenDao(rsaTokenDao), logger(logger) {
 
 }
