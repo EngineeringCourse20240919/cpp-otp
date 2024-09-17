@@ -1,5 +1,7 @@
 #include "Birthday.h"
 
+Birthday::Birthday(Today *today) : today(today) {}
+
 bool Birthday::IsBirthday() {
-    return date::year_month_day().month() == date::month{4} && date::year_month_day().day() == date::day{9};
+    return today->GetToday().month() == date::month{4} && today->GetToday().day() == date::day{9};
 }
