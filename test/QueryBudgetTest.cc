@@ -84,5 +84,14 @@ namespace {
         ASSERT_EQ(11, total);
     }
 
+    TEST_F(QueryBudgetTest, TwoBudgets) {
+        std::vector<Budget> budgets = std::vector<Budget>{ Budget(30, year(2024)/month(9)), Budget(31, year(2024)/month(10)) };
+        ON_CALL(*stubBudgetRepo, findAll()).WillByDefault(Return(budgets));
+
+        int total = target->Calculate(year(2024)/month(9)/day(20), year(2024)/month(10)/day(10));
+
+        ASSERT_EQ(11 + 10, total);
+    }
+
 
 }

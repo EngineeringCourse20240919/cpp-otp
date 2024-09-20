@@ -5,11 +5,13 @@ QueryBudget::QueryBudget(BudgetRepo *budgetRepo) : budgetRepo(budgetRepo) {
 }
 
 unsigned int QueryBudget::Calculate(const year_month_day &start, const year_month_day &end) {
-    if (budgetRepo->findAll().empty()) {
-        return 0;
+    int total = 0;
+
+    for (Budget budget : budgetRepo->findAll()) {
+        total += getOverlappingDayCount(start, end, budget);
     }
-    Budget budget = budgetRepo->findAll().at(0);
-    return getOverlappingDayCount(start, end, budget);
+
+    return total;
 }
 
 unsigned int
