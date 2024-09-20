@@ -9,7 +9,6 @@ public:
     unsigned int Calculate(const year_month_day& start, const year_month_day& end);
 private:
     BudgetRepo* budgetRepo;
-    int getOverlappingDayNum(const year_month_day &start, const year_month_day &end, Budget& budget) const;
 };
 
 
