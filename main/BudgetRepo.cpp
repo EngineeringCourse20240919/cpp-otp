@@ -10,6 +10,10 @@ year_month Budget::GetYearMonth() {
     return yearMonth;
 }
 
+year_month_day Budget::GetStart() {
+    return yearMonth / 1;
+}
+
 std::vector<Budget> BudgetRepo::findAll() {
     return std::vector<Budget>();
 }
