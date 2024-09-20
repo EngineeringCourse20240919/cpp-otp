@@ -94,4 +94,12 @@ namespace {
     }
 
 
+    TEST_F(QueryBudgetTest, DailyAmount) {
+        givenBudget(Budget(60, year(2024)/month(9)));
+
+        int total = target->Calculate(year(2024)/month(9)/day(20), year(2024)/month(10)/day(10));
+
+        ASSERT_EQ(11 * 2, total);
+    }
+
 }

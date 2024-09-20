@@ -8,7 +8,8 @@ unsigned int QueryBudget::Calculate(const year_month_day &start, const year_mont
     int total = 0;
 
     for (Budget budget : budgetRepo->findAll()) {
-        total += getOverlappingDayCount(start, end, budget);
+        int dailyAmount = budget.GetAmount() / (unsigned int)((budget.GetYearMonth() / last).day());
+        total += dailyAmount * getOverlappingDayCount(start, end, budget);
     }
 
     return total;
