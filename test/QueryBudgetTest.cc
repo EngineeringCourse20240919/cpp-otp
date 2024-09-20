@@ -35,7 +35,7 @@ namespace {
         ASSERT_EQ(0, total);
     }
 
-    TEST_F(QueryBudgetTest, StartSameAsEnd) {
+    TEST_F(QueryBudgetTest, StartSameAsEnd_OneBudget) {
         givenBudget(Budget(30, year(2024)/month(9)));
 
         int total = target->Calculate(year(2024)/month(9)/day(20), year(2024)/month(9)/day(20));
@@ -43,6 +43,14 @@ namespace {
         ASSERT_EQ(1, total);
     }
 
+
+    TEST_F(QueryBudgetTest, StartEndSameMonth_OneBudget) {
+        givenBudget(Budget(30, year(2024)/month(9)));
+
+        int total = target->Calculate(year(2024)/month(9)/day(20), year(2024)/month(9)/day(25));
+
+        ASSERT_EQ(6, total);
+    }
 
 
 }

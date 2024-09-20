@@ -8,5 +8,5 @@ unsigned int QueryBudget::Calculate(const year_month_day &start, const year_mont
     if (budgetRepo->findAll().empty()) {
         return 0;
     }
-    return 1;
+    return (sys_days(end) - sys_days(start)).count() + 1;
 }
