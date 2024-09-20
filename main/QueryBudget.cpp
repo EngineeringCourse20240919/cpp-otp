@@ -16,29 +16,15 @@ unsigned int QueryBudget::Calculate(const year_month_day& start, const year_mont
         month endMonth = end.month();
         if(startYear == endYear && startMonth == endMonth){
             if(budget.GetYearMonth() == year_month(startYear,startMonth)){
-            int dayNum = (sys_days{end} - sys_days{start}).count() + 1;
-            int amount = budget.GetAmount();
-            year_month_day lastDay = start.year() / start.month() / last;
-            year_month_day firstDay = start.year() / start.month() / 1;
-            int eachDay = (budget.GetAmount() / ((sys_days{lastDay} - sys_days{firstDay}).count() + 1));
-            allAmount = dayNum * eachDay;
+                int dayNum = (sys_days{end} - sys_days{start}).count() + 1;
+                year_month_day lastDay = start.year() / start.month() / last;
+                int dailyAmount = budget.GetAmount() / (unsigned int) (lastDay.day());
+                allAmount = dayNum * dailyAmount;
             }
         }else{
         //去除首尾
-            date::year startYearTemp = startYear;
-            date::year endYearTemp = endYear;
-            date::month startMonthTemp = startMonth;
-            date::month endMonthTemp = endMonth;
-            startMonthTemp++;
-            endMonthTemp--;
-            if(startMonthTemp == date::month{1}){
-                startYearTemp++;
-            }
-            if(endMonthTemp == date::month{12}){
-                endYearTemp--;
-            }
-            date::year_month ym_start = startYearTemp / date::month{startMonthTemp};
-            date::year_month ym_end = endYearTemp /date::month{endMonthTemp};
+            date::year_month ym_start = startYear / startMonth + months{1};
+            date::year_month ym_end = endYear / endMonth - months{1};
             if(ym_start <= ym_end){
             for (year_month ym = ym_start; ym <= ym_end; ym += months{1}) {
                 std::cout << ym << "\n";
