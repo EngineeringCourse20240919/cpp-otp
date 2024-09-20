@@ -14,6 +14,10 @@ year_month_day Budget::GetStart() {
     return yearMonth / 1;
 }
 
+year_month_day Budget::GetEnd() {
+    return yearMonth / last;
+}
+
 std::vector<Budget> BudgetRepo::findAll() {
     return std::vector<Budget>();
 }

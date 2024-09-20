@@ -60,5 +60,13 @@ namespace {
         ASSERT_EQ(25, total);
     }
 
+    TEST_F(QueryBudgetTest, StartAfterBudgetEnd_OneBudget) {
+        givenBudget(Budget(30, year(2024)/month(9)));
+
+        int total = target->Calculate(year(2024)/month(10)/day(20), year(2024)/month(10)/day(25));
+
+        ASSERT_EQ(0, total);
+    }
+
 
 }

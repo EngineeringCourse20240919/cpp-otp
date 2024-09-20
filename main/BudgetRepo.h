@@ -12,6 +12,7 @@ public:
     int GetAmount();
     year_month GetYearMonth();
     year_month_day GetStart();
+    year_month_day GetEnd();
 
 private:
     int amount;

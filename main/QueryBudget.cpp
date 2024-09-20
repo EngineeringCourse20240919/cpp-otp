@@ -9,6 +9,9 @@ unsigned int QueryBudget::Calculate(const year_month_day &start, const year_mont
         return 0;
     }
     Budget budget = budgetRepo->findAll().at(0);
+    if (start > budget.GetEnd()) {
+        return 0;
+    }
     if (start < budget.GetStart()) {
         return (sys_days(end) - sys_days(budget.GetStart())).count() + 1;
     }
