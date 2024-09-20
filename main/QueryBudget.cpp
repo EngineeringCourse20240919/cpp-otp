@@ -16,7 +16,7 @@ unsigned int QueryBudget::Calculate(const year_month_day& start, const year_mont
         month endMonth = end.month();
         if(startYear == endYear && startMonth == endMonth){
             if(budget.GetYearMonth() == year_month(startYear,startMonth)){
-                int dayNum = (sys_days{end} - sys_days{start}).count() + 1;
+                int dayNum = getOverlappingDayNum(start, end, budget);
                 allAmount = dayNum * budget.GetDailyAmount();
             }
         }else{
@@ -25,19 +25,26 @@ unsigned int QueryBudget::Calculate(const year_month_day& start, const year_mont
             date::year_month ym_end = endYear / endMonth - months{1};
             for (year_month ym = ym_start; ym <= ym_end; ym += months{1}) {
                 if(budget.GetYearMonth() == ym){
-                    allAmount += budget.GetAmount();
+                    int dayNum = getOverlappingDayNum(start, end, budget);
+                    allAmount += dayNum * budget.GetDailyAmount();
                 }
             }
             if(budget.GetYearMonth() == year_month(startYear,startMonth)){
-                int dayNum = (sys_days{start.year() / start.month() / last} - sys_days{start}).count() + 1;
+                int dayNum = getOverlappingDayNum(start, end, budget);
                 allAmount += dayNum * budget.GetDailyAmount();
             }
             if(budget.GetYearMonth() == year_month(endYear,endMonth)){
-                int dayNum = (sys_days{end} - sys_days{end.year() / end.month() / 1}).count() + 1;
+                int dayNum = getOverlappingDayNum(start, end, budget);
                 allAmount += dayNum * budget.GetDailyAmount();
             }
         }
     }
     return allAmount;
+}
+
+int QueryBudget::getOverlappingDayNum(const year_month_day &start, const year_month_day &end, Budget& budget) const {
+    year_month_day overlappingEnd = end < budget.GetYearMonth() / last ? end : budget.GetYearMonth() / last;
+    year_month_day overlappingStart = start > budget.GetYearMonth() / 1 ? start : budget.GetYearMonth() / 1;
+    return (sys_days{overlappingEnd} - sys_days{overlappingStart}).count() + 1;
 }
 
