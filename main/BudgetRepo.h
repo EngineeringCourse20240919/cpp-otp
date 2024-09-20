@@ -11,6 +11,7 @@ public:
     Budget(int amount, const year_month& yearMonth);
     int GetAmount();
     year_month GetYearMonth();
+    int GetDailyAmount() const;
 
 private:
     int amount;

@@ -10,6 +10,11 @@ year_month Budget::GetYearMonth() {
     return yearMonth;
 }
 
+int Budget::GetDailyAmount() const {
+    year_month_day lastDay = yearMonth / last;
+    return amount / (unsigned int) (lastDay.day());
+}
+
 std::vector<Budget> BudgetRepo::findAll() {
     return std::vector<Budget>();
 }

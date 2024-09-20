@@ -9,8 +9,6 @@ public:
     unsigned int Calculate(const year_month_day& start, const year_month_day& end);
 private:
     BudgetRepo* budgetRepo;
-
-    int getDailyAmount(Budget &budget) const;
 };
 
 

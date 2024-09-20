@@ -17,7 +17,7 @@ unsigned int QueryBudget::Calculate(const year_month_day& start, const year_mont
         if(startYear == endYear && startMonth == endMonth){
             if(budget.GetYearMonth() == year_month(startYear,startMonth)){
                 int dayNum = (sys_days{end} - sys_days{start}).count() + 1;
-                allAmount = dayNum * getDailyAmount(budget);
+                allAmount = dayNum * budget.GetDailyAmount();
             }
         }else{
         //去除首尾
@@ -30,19 +30,14 @@ unsigned int QueryBudget::Calculate(const year_month_day& start, const year_mont
             }
             if(budget.GetYearMonth() == year_month(startYear,startMonth)){
                 int dayNum = (sys_days{start.year() / start.month() / last} - sys_days{start}).count() + 1;
-                allAmount += dayNum * getDailyAmount(budget);
+                allAmount += dayNum * budget.GetDailyAmount();
             }
             if(budget.GetYearMonth() == year_month(endYear,endMonth)){
                 int dayNum = (sys_days{end} - sys_days{end.year() / end.month() / 1}).count() + 1;
-                allAmount += dayNum * getDailyAmount(budget);
+                allAmount += dayNum * budget.GetDailyAmount();
             }
         }
     }
     return allAmount;
-}
-
-int QueryBudget::getDailyAmount(Budget &budget) const {
-    year_month_day lastDay = budget.GetYearMonth() / last;
-    return budget.GetAmount() / (unsigned int) (lastDay.day());
 }
 
