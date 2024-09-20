@@ -39,11 +39,10 @@ unsigned int QueryBudget::Calculate(const year_month_day& start, const year_mont
                 allAmount += dayNum * dailyAmount;
             }
             if(budget.GetYearMonth() == year_month(endYear,endMonth)){
-                year_month_day firstDay = end.year() / end.month() / 1;
                 year_month_day lastDay = end.year() / end.month() / last;
-                int endDayNum = (sys_days{end} - sys_days{end.year() / end.month() / 1}).count() + 1;
-                int eachDay = (budget.GetAmount() / ((sys_days{lastDay} - sys_days{firstDay}).count() + 1));
-                allAmount += endDayNum * eachDay;
+                int dayNum = (sys_days{end} - sys_days{end.year() / end.month() / 1}).count() + 1;
+                int dailyAmount = budget.GetAmount() / (unsigned int) (lastDay.day());
+                allAmount += dayNum * dailyAmount;
             }
         }
     }
